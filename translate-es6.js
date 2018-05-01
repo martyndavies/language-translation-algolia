@@ -47,7 +47,7 @@ const translate = inputText => {
       const { translations } = response.data;
 
       // Is there a translation?
-      if (translations.length > 0) {
+      if (translations.length > 0 && typeof translations !== 'undefined') {
         // If yes, send it to be added to our Algolia object
         index
           .partialUpdateObject({
