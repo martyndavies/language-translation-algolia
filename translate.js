@@ -25,9 +25,9 @@ function translate(inputText) {
 
   // Create an object of the input text, source lang and target lang
   let objectToTranslate = {
-    text: inputText,
-    source: 'en',
-    target: 'es'
+    text: inputText, // The words to be translated
+    source: 'en', // The language they are in
+    target: 'es' // The language you want them to be
   };
 
   // Request the translation from IBM Watson
@@ -51,7 +51,7 @@ function translate(inputText) {
         // If yes, send it to be added to our Algolia object
         index.partialUpdateObject(
           {
-            description_es: translations[0].translation,
+            description_es: translations[0].translation, // This is a new field we'll add to the existing object
             objectID: algoliaObjectID
           },
           function(err, content) {
