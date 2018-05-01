@@ -17,6 +17,9 @@ const axios = require('axios');
 // Example: $node translate 3dvf4fg
 const algoliaObjectID = process.argv[2];
 
+// Take in the target language (es, fr, de)
+const targetLanguage = process.argv[3];
+
 // Translate the text
 function translate(inputText) {
   console.log(
@@ -27,7 +30,7 @@ function translate(inputText) {
   let objectToTranslate = {
     text: inputText, // The words to be translated
     source: 'en', // The language they are in
-    target: 'es' // The language you want them to be
+    target: targetLanguage // The language you want them to be
   };
 
   // Request the translation from IBM Watson
@@ -48,17 +51,21 @@ function translate(inputText) {
 
       // Is there a translation?
       if (translations.length > 0 && typeof translations !== 'undefined') {
+        let translatedObject = {
+          objectID: algoliaObjectID
+        };
+
+        // This is a new field we'll add to the existing object
+        // Here we're dynamically setting the key so that different language
+        // translations can be added to the same object
+        translatedObject['description_' + targetLanguage] =
+          translations[0].translation;
+
         // If yes, send it to be added to our Algolia object
-        index.partialUpdateObject(
-          {
-            description_es: translations[0].translation, // This is a new field we'll add to the existing object
-            objectID: algoliaObjectID
-          },
-          function(err, content) {
-            if (err) throw err;
-            console.log('Translation added to ' + algoliaObjectID);
-          }
-        );
+        index.partialUpdateObject(translatedObject, function(err, content) {
+          if (err) throw err;
+          console.log('Translation added to ' + algoliaObjectID);
+        });
       } else {
         // If no translation then let us know that
         console.log('Error translating ' + algoliaObjectID);
