@@ -28,7 +28,7 @@ func translate(textToTranslate, algoliaObjectID, targetLanguage string) string {
 		Target: targetLanguage,
 	}
 
-	// Send the JSON object to IBM for transaltion
+	// Send the JSON object to IBM for translation
 	resp, err := resty.R().
 		SetHeader("Content-Type", "application/json").
 		SetBasicAuth(os.Getenv("IBM_USERNAME"), os.Getenv("IBM_PASSWORD")).
